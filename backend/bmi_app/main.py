@@ -1,6 +1,6 @@
 """
 Script Name : main.py
-Description : Main application
+Description : Entrypoint for FastAPI app (creates app, includes routes)
 Author      : @tonybnya
 """
 from fastapi import FastAPI

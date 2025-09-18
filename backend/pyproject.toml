@@ -1,9 +1,12 @@
 [project]
-name = "bmi-calculator"
+name = "backend"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi[standard]>=0.116.2",
+    "pydantic>=2.11.9",
+    "sqlalchemy>=2.0.43",
+    "uvicorn[standard]>=0.35.0",
 ]
