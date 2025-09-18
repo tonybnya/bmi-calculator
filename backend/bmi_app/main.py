@@ -5,7 +5,12 @@ Author      : @tonybnya
 """
 from fastapi import FastAPI
 
-app = FastAPI(root_path="/api/v1")
+from bmi_app.api import routes_bmi
+
+app = FastAPI(root_path="/api/v1", title="BMI Calculator API", version="1.0")
+
+# include routes
+app.include_router(routes_bmi.router, prefix="/bmi", tags=["bmi"])
 
 
 @app.get('/')
@@ -13,4 +18,4 @@ def root():
     """
     Root endpoint.
     """
-    return {"message": "Hello, World!"}
+    return {"message": "Welcome to the BMI Calculator API"}
