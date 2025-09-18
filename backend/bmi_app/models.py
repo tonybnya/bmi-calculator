@@ -3,19 +3,38 @@ Script Name : models.py
 Description : SQLAlchemy models (User, Measurement, BMICategory)
 Author      : @tonybnya
 """
+import enum
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, DateTime, Float, Integer, String
+from sqlalchemy import (Column, DateTime, Enum, Float, ForeignKey, Integer,
+                        String, Text)
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
+
+
+class WeightUnit(enum.Enum):
+    """
+    Weight unit options.
+    """
+    KB = "kg"
+    LB = "lb"
+
+
+class HeightUnit(enum.Enum):
+    """
+    Height unit options.
+    """
+    M = "m"
+    CM = "cm"
+    IN_FT = "in/ft"
 
 
 class User(Base):
     """
     Define the User model.
     """
-    __tablename__ == "users"
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True, nullable=False)
@@ -36,7 +55,7 @@ class BMICategory(Base):
     """
     Define the BMI Category model.
     """
-    __tablename__ == "bmi_categories"
+    __tablename__ = "bmi_categories"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), nullable=False)
@@ -44,3 +63,38 @@ class BMICategory(Base):
     max_value = Column(Float, nullable=True)
 
     measurements = relationship("Measurement", back_populates="category")
+
+
+class Measurement(Base):
+    """
+    Define the Measurement model.
+    """
+    __tablename__ = "measurements"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    category_id = Column(
+        Integer,
+        ForeignKey("bmi_categories_id"),
+        nullable=False
+    )
+
+    height = Column(Float, nullable=False)
+    height_unit = Column(Enum(HeightUnit), nullable=False, default=HeightUnit.M)
+    weight = Column(Float, nullable=False)
+    weight_unit = Column(Enum(WeightUnit), nullable=False, default=WeightUnit.KG)
+
+    height_m = Column(Float, nullable=False)
+    weight_kg = Column(Float, nullable=False)
+    bmi = Column(Float, nullable=False)
+
+    recorded_at = Column(
+        DateTime,
+        default=lambda: datetime.now(timezone.utc)
+    )
+    notes = Column(Text, nullable=True)
+
+    # Relationship back to User
+    user = relationship("User", back_populates="measurements")
+    # Relationship back to BMICategory
+    category = relationship("BMICategory", back_populates="measurements")
