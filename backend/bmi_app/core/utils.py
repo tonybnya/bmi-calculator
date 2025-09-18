@@ -5,6 +5,16 @@ Author      : @tonybnya
 """
 
 
+def calculate_bmi(height_m: float, weight_kg: float) -> tuple[float, float]:
+    """
+    Calculate the BMI.
+    Formula: BMI = weight_kg / (height_m ** 2)
+    """
+    bmi_raw = weight_kg / (height_m ** 2)
+    bmi = round(bmi_raw, 2)
+    return (bmi, bmi_raw)
+
+
 def categorize(bmi: float) -> str:
     """
     Define the category of a BMI measure.
