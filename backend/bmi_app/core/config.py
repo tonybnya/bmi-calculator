@@ -4,72 +4,51 @@ Description : App settings & environment variables
 Author      : @tonybnya
 """
 from functools import lru_cache
-from typing import Any
+from typing import List
 
-from pydantic import BaseSettings, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """
     Application settings and configuration.
     """
+    # Configuration
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore"
+    )
+
     # App settings
-    app_name: str = Field(default="BMI Calculator API", env="APP_NAME")
-    app_version: str = Field(default="1.0.0", env="APP_VERSION")
-    debug: bool = Field(default=False, env="DEBUG")
+    app_name: str = "BMI Calculator API"
+    app_version: str = "1.0.0"
+    debug: bool = False
 
     # Database settings
-    database_url: str = Field(
-        default="sqlite:///./bmi.db",
-        env="DATABASE_URL",
-        description="Database connection URL"
-    )
+    database_url: str = "sqlite:///./bmi_calculator.db"
 
     # Security settings
-    secret_key: str = Field(
-        default="your-secret-key-here-change-in-production",
-        env="SECRET_KEY",
-        description="Secret key for JWT token generation"
-    )
-    algorithm: str = Field(default="HS256", env="ALGORITHM")
-    access_token_expire_minutes: int = Field(
-        default=30,
-        env="ACCESS_TOKEN_EXPIRE_MINUTES"
-    )
+    secret_key: str = "your-secret-key-here-change-in-production"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
 
     # CORS settings
-    allowed_origins: list[str] = Field(
-        default=[
-            "http://localhost:5173",
-            "http://127.0.0.1:5173",
-            "http://localhost:5174",
-            "http://127.0.0.1:5174"
-        ],
-        env="ALLOWED_ORIGINS"
-    )
+    allowed_origins_str: str = "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173"
+
+    @property
+    def allowed_origins(self) -> List[str]:
+        """Parse comma-separated origins into a list."""
+        return [origin.strip() for origin in self.allowed_origins_str.split(",") if origin.strip()]
 
     # API settings
-    api_v1_prefix: str = Field(default="/api/v1", env="API_V1_PREFIX")
+    api_v1_prefix: str = "/api/v1"
 
     # Server settings
-    host: str = Field(default="127.0.0.1", env="HOST")
-    port: int = Field(default=8000, env="PORT")
+    host: str = "127.0.0.1"
+    port: int = 8000
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
-
-        @classmethod
-        def parse_env_var(cls, field_name: str, raw_val: str) -> Any:
-            """Custom parser for environment variables."""
-            if field_name == "allowed_origins":
-                # Parse comma-separated string into list
-                return [origin.strip() for origin in raw_val.split(",") if origin.strip()]
-            elif field_name == "debug":
-                # Parse boolean values
-                return raw_val.lower() in ("true", "1", "yes", "on")
-            return raw_val
 
 
 @lru_cache()
