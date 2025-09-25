@@ -18,7 +18,7 @@ class WeightUnit(enum.Enum):
     """
     Weight unit options.
     """
-    KB = "kg"
+    KG = "kg"
     LB = "lb"
 
 
@@ -76,7 +76,7 @@ class Measurement(Base):
     user_id = Column(String(36), ForeignKey("users.id"), nullable=False)
     category_id = Column(
         Integer,
-        ForeignKey("bmi_categories_id"),
+        ForeignKey("categories.id"),
         nullable=False
     )
 
