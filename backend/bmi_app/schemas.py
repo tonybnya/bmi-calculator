@@ -30,7 +30,7 @@ class BMICalculateResponse(BaseModel):
     formula: str
 
 
-class BMICategory(BaseModel):
+class Category(BaseModel):
     name: str = Field(..., description="Name of the BMI category")
     min_value: Optional[float] = Field(
         None,
@@ -44,8 +44,8 @@ class BMICategory(BaseModel):
     )
 
 
-class BMICategoriesResponse(BaseModel):
-    categories: list[BMICategory] = Field(
+class CategoriesResponse(BaseModel):
+    categories: list[Category] = Field(
         ...,
         description="List of BMI categories"
     )

@@ -8,7 +8,7 @@ from fastapi import APIRouter
 from bmi_app.core.utils import (calculate_bmi, categorize, get_formula, to_kg,
                                 to_meters)
 from bmi_app.schemas import (BMICalculateRequest, BMICalculateResponse,
-                             BMICategoriesResponse, BMICategory)
+                             CategoriesResponse, Category)
 
 router = APIRouter()
 
@@ -36,12 +36,12 @@ def calculate_bmi_endpoint(data: BMICalculateRequest):
     )
 
 
-@router.get("/categories", response_model=BMICategoriesResponse)
-def get_bmi_categories():
+@router.get("/categories", response_model=CategoriesResponse)
+def read_categories():
     """
     Get BMI categories endpoint.
     """
-    categories_data: list[BMICategory] = [
+    categories_data: list[Category] = [
       {"name": "Underweight", "min_value": None, "max_value": 18.5},
       {"name": "Normal", "min_value": 18.5, "max_value": 25},
       {"name": "Overweight", "min_value": 25, "max_value": 30},
@@ -49,5 +49,5 @@ def get_bmi_categories():
       {"name": "Obesity II", "min_value": 35, "max_value": 40},
       {"name": "Obesity III", "min_value": 40, "max_value": None}
     ]
-    categories = [BMICategory(**category) for category in categories_data]
-    return BMICategoriesResponse(categories=categories)
+    categories = [Category(**category) for category in categories_data]
+    return CategoriesResponse(categories=categories)

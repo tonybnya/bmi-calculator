@@ -27,7 +27,7 @@ class HeightUnit(enum.Enum):
     """
     M = "m"
     CM = "cm"
-    IN_FT = "in/ft"
+    IN = "in"
 
 
 class User(Base):
@@ -51,11 +51,11 @@ class User(Base):
     measurements = relationship("Measurement", back_populates="user")
 
 
-class BMICategory(Base):
+class Category(Base):
     """
     Define the BMI Category model.
     """
-    __tablename__ = "bmi_categories"
+    __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), nullable=False)
