@@ -22,24 +22,10 @@ def get_user_by_id(db: Session, user_id: str) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def get_user_by_email(db: Session, email: str) -> Optional[User]:
-    """
-    Retrieve a user by email.
-    """
-    return db.query(User).filter(User.email == email).first()
-
-
-def get_user_by_username(db: Session, username: str) -> Optional[User]:
-    """
-    Retrieve a user by username.
-    """
-    return db.query(User).filter(User.username == username).first()
-
-
 def create_user(
-    db: Session, 
-    username: str, 
-    email: str, 
+    db: Session,
+    username: str,
+    email: str,
     password_hash: str
 ) -> User:
     """
@@ -57,8 +43,8 @@ def create_user(
 
 
 def update_user(
-    db: Session, 
-    user_id: str, 
+    db: Session,
+    user_id: str,
     username: Optional[str] = None,
     email: Optional[str] = None,
     password_hash: Optional[str] = None
@@ -89,15 +75,4 @@ def delete_user(db: Session, user_id: str) -> bool:
         db.delete(db_user)
         db.commit()
         return True
-    return False
-
-
-def user_exists(db: Session, username: str = None, email: str = None) -> bool:
-    """
-    Check if a user exists by username or email.
-    """
-    if username:
-        return db.query(User).filter(User.username == username).first() is not None
-    if email:
-        return db.query(User).filter(User.email == email).first() is not None
     return False
