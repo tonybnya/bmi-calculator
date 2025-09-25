@@ -4,6 +4,7 @@ Description : SQLAlchemy models (User, Measurement, BMICategory)
 Author      : @tonybnya
 """
 import enum
+import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import (Column, DateTime, Enum, Float, ForeignKey, Integer,
@@ -36,7 +37,7 @@ class User(Base):
     """
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
@@ -72,7 +73,7 @@ class Measurement(Base):
     __tablename__ = "measurements"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(String(36), ForeignKey("users.id"), nullable=False)
     category_id = Column(
         Integer,
         ForeignKey("bmi_categories_id"),
