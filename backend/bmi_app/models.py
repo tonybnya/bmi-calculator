@@ -97,5 +97,5 @@ class Measurement(Base):
 
     # Relationship back to User
     user = relationship("User", back_populates="measurements")
-    # Relationship back to BMICategory
-    category = relationship("BMICategory", back_populates="measurements")
+    # Relationship back to Category
+    category = relationship("Category", back_populates="measurements")
